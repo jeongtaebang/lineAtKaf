@@ -1,0 +1,71 @@
+<!-- connect to Mongo DB clould -->
+<% client = Mongo::Client.new('mongodb://admin:hackDartmouth16@ds021326.mlab.com:21326/kafline') %>
+<% collection = client[:sensorData] %>
+
+<div id="sensor_data">
+	<h1>Line at KAF</h1>
+	<div class="row">
+		<div class="col-md-3">	
+			<p style="margin-bottom: 40px">Service Speed</p>
+		</div>
+	
+	<% counter = 0 %>
+	<!-- get each MongoDB item in reverse -->
+	<% collection.find().reverse_each do |item| %>
+		<!-- only for the last (first) item -->
+		<% if counter == 0 %>
+			<!-- red on -->
+			<% if item[:Distance] < 2 %>
+				<div class="col-md-1" style="display: inline-block">
+					<%= image_tag('red_off.png', size: '60x60', alt: "redoff") %>
+					<%= image_tag('yellow_off.png', size: '60x60', alt: "yellowoff") %>
+					<%= image_tag('green_on.png', size: '60x60', id: 'blinkeffect', alt: "greenon") %>
+				</div>
+			<!-- yellow on -->
+			<% elsif item[:Distance] <= 3 %>
+				<div class="col-md-1" style="display: inline-block">
+					<%= image_tag('red_off.png', size: '60x60', alt: "redoff") %>
+					<%= image_tag('yellow_on.png', size: '60x60', id: 'blinkeffect', alt: "yellowon") %>
+					<%= image_tag('green_off.gif', size: '60x60', alt: "greenoff") %>
+				</div>
+			<!-- red on -->
+			<% else %>
+				<div class="col-md-1" style="display: inline-block">
+					<%= image_tag('green_off.gif', size: '60x60', alt: "greenoff") %>
+					<%= image_tag('yellow_off.png', size: '60x60', alt: "yellowoff") %>
+					<%= image_tag('red_on.png', size: '60x60', id: 'blinkeffect', alt: "redon") %>
+				</div>
+			<% end %>
+	</div>
+
+	<hr>
+			<p style="margin-top: 40px">Length of line at <%= item[:Date] %>: <%= item[:Distance] %></p>
+
+			<!-- draw 8 rectangles barometer -->
+			<% numTotalRec = 8 %> <!-- from 0 to 8 -->
+			<% numFilledRec = (item[:Distance] * 2).round %> 
+			<% numEmptyRec = numTotalRec - numFilledRec %>
+			<p class="counter-header">Counter    </p>
+			<% (1..numFilledRec).each do |filledRecs| %>
+				<div id="filled-rectangle"></div>
+			<% end %>
+			<% (1..numEmptyRec).each do |emptyRecs| %>
+				<div id="empty-rectangle"></div>
+			<% end %>
+
+
+		<% end %>
+		<% counter += 1 %>
+	<% end %>
+ 
+</div>
+
+<!-- auto referesh at certain interval -->
+<script language="javascript" type="text/javascript">setTimeout("location.reload();",20000);</script>
+<!-- blink the light turned on -->
+<script type="text/javascript">
+function blink() {
+    $('#blinkeffect').fadeOut(500).fadeIn(500);
+}
+setInterval(blink, 1000); 
+</script>

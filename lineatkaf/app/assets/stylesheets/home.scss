@@ -1,0 +1,38 @@
+// Place all the styles related to the home controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+body {
+	padding: 60px;
+}
+
+.glyphicon.glyphicon-one-fine-dot.red{
+    margin-top: 30em;
+    overflow: hidden;
+}
+
+.glyphicon.glyphicon-one-fine-dot:before.red{
+    content:"\25cf";
+    font-size: 10em;
+    color: red;
+}
+
+.counter-header {
+	display: inline-block;
+    font-size: 40px;
+}
+
+#filled-rectangle {
+	display: inline-block;
+    width:35px;
+    height:35px;
+    background:black;
+}
+
+#empty-rectangle {
+	display: inline-block;
+    width:30px;
+    height:30px;
+    border-color: black;
+    border: 2px solid;
+}
